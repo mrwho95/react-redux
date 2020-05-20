@@ -3,8 +3,12 @@
 
 //simple node js app
 const redux = require("redux");
+const reduxLogger = require("redux-logger");
+
 const createStore = redux.createStore;
 const combineReducers = redux.combineReducers;
+const applyMiddleware = redux.applyMiddleware; //Middleware extends redux with custom functionality, use middleware for logging, crash reporting, performing asynchronous tasks
+const logger = reduxLogger.createLogger(); //logging
 
 // ACTION
 const BUY_CAKE = "BUY_CAKE";
@@ -73,11 +77,9 @@ const rootReducer = combineReducers({
   cake: cakeReducer,
   iceCream: iceCreamReducer,
 });
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(logger)); //second parameter apply redux logger to log data
 console.log("initial state", store.getState()); //access to state via getState()
-const unsubcribe = store.subscribe(() =>
-  console.log("Updated state", store.getState())
-); //register listeners via subcribe(listener)
+const unsubcribe = store.subscribe(() => {}); //register listeners via subcribe(listener)
 store.dispatch(buyCake()); //allow state to be updated dispatch(action)
 store.dispatch(buyCake());
 store.dispatch(buyCake());
